@@ -18,6 +18,10 @@ const EXCLUDE_FILE_PATTERNS = [
   /\.test\.(ts|tsx|js|mjs|jsx)$/,
   /\.spec\.(ts|tsx|js|mjs|jsx)$/,
   /validate-deploy-env\.mjs$/,
+  // Security guard that intentionally references forbidden NEXT_PUBLIC_ names
+  // to assert they never reach client code. They must not be documented as
+  // usable configuration, so exclude it from the documentation check.
+  /assert-no-issuer-secrets-in-bundle\.mjs$/,
 ];
 
 function stripComments(line) {

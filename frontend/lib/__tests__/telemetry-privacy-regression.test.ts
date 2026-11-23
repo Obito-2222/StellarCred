@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { stripSensitiveFields, SAFE_FIELDS } from "../logger";
 import { summarizeProofs, type ProofRun } from "../telemetry-reporter";
+import { PROOF_PERF_TARGETS } from "../proof-perf";
 
 describe("telemetry-privacy-regression (#975)", () => {
   const sensitiveCredentialPayload = {
@@ -50,15 +51,36 @@ describe("telemetry-privacy-regression (#975)", () => {
     const mockRuns: ProofRun[] = [
       {
         id: "run-1",
+        status: "ok",
         credentialType: "kyc",
-        timestamp: 1700000000,
+        startedAt: 1700000000,
         stages: [
-          { stage: "witness", durationMs: 200 },
-          { stage: "prove", durationMs: 800 },
-          { stage: "submit", durationMs: 400 },
+          {
+            stage: "witness",
+            durationMs: 200,
+            budgetMs: PROOF_PERF_TARGETS.witnessMs,
+            overBudget: false,
+          },
+          {
+            stage: "prove",
+            durationMs: 800,
+            budgetMs: PROOF_PERF_TARGETS.proveMs,
+            overBudget: false,
+          },
+          {
+            stage: "submit",
+            durationMs: 400,
+            budgetMs: PROOF_PERF_TARGETS.submitMs,
+            overBudget: false,
+          },
         ],
         timeToFirstProofMs: 1400,
+        totalMs: 1800,
+        exceededBudget: false,
         deviceClass: "desktop",
+        cores: 8,
+        memoryGB: 16,
+        warm: false,
       },
     ];
 

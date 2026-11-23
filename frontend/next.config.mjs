@@ -51,6 +51,16 @@ const nextConfig = {
     "@noir-lang/noirc_abi",
   ],
 
+  // Turbopack (the default bundler in Next 16) ignores the webpack config
+  // below, including its @ledgerhq/devices/hid-framing rewrite. Mirror that
+  // rewrite here so the Ledger transport's subpath import resolves against the
+  // package's lib-es build (the root entry has no hid-framing.js).
+  turbopack: {
+    resolveAlias: {
+      "@ledgerhq/devices/hid-framing": "@ledgerhq/devices/lib-es/hid-framing.js",
+    },
+  },
+
   // Noir + Barretenberg (bb.js) prove in WASM in the browser. They expect Node
   // globals (Buffer/process) and load WASM modules; these settings make the
   // client bundle work without server-side polyfills.
